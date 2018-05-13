@@ -24,7 +24,7 @@ defmodule MetexOtp.Cache do
     {:noreply, Map.put(state, key, term)}
   end
 
-  def handle_call({:read, key, _from, state}) do
+  def handle_call({:read, key}, _from, state) do
     {:reply, state[key], state}
   end
 
