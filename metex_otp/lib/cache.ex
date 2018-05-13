@@ -23,6 +23,10 @@ defmodule MetexOtp.Cache do
     GenServer.cast(@name, :clear)
   end
 
+  def exist?(key) do
+    GenServer.call(@name, {:exist?, key})
+  end
+
   ## Server callbacks
   def init(:ok) do
     {:ok, %{}}
@@ -42,6 +46,10 @@ defmodule MetexOtp.Cache do
 
   def handle_call({:read, key}, _from, state) do
     {:reply, state[key], state}
+  end
+
+  def handle_call({:exist?, key}, _from, state) do
+    {:reply, Map.has_key?(state, key), state}
   end
 
   ## Helper functions
