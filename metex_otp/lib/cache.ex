@@ -8,7 +8,7 @@ defmodule MetexOtp.Cache do
   end
 
   def write(key, term) do
-    GenServer.call(@name, {:write, {key, term}})
+    GenServer.cast(@name, {:write, {key, term}})
   end
 
   ## Server callbacks
@@ -16,7 +16,7 @@ defmodule MetexOtp.Cache do
     {:ok, %{}}
   end
 
-  def handle_call({:write, {key, term}}, _from, state) do
+  def handle_cast({:write, {key, term}}, _from, state) do
     {:reply, {key, term}, state}
   end
 
