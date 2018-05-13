@@ -19,6 +19,10 @@ defmodule MetexOtp.Cache do
     GenServer.cast(@name, {:delete, key})
   end
 
+  def clear do
+    GenServer.cast(@name, :clear)
+  end
+
   ## Server callbacks
   def init(:ok) do
     {:ok, %{}}
@@ -30,6 +34,10 @@ defmodule MetexOtp.Cache do
 
   def handle_cast({:delete, key}, state) do
     {:noreply, Map.delete(state, key)}
+  end
+
+  def handle_cast(:clear, _state) do
+    {:noreply, %{}}
   end
 
   def handle_call({:read, key}, _from, state) do
