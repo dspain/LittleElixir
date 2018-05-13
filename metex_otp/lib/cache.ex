@@ -21,7 +21,7 @@ defmodule MetexOtp.Cache do
   end
 
   def handle_cast({:write, {key, term}}, _from, state) do
-    {:reply, {key, term}, state}
+    {:reply, {key, term}, Map.put(state, key, term)}
   end
 
   def handle_call({:read, key, _from, state}) do
