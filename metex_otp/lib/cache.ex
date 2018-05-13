@@ -4,7 +4,7 @@ defmodule MetexOtp.Cache do
 
   ## Client API
   def start_link(opts \\ []) do
-    GenServer.start_link(__MODULE__, :ok, opts)
+    GenServer.start_link(__MODULE__, :ok, opts ++ [name: @name])
   end
 
   def write(key, term) do
@@ -20,8 +20,8 @@ defmodule MetexOtp.Cache do
     {:ok, %{}}
   end
 
-  def handle_cast({:write, {key, term}}, _from, state) do
-    {:reply, {key, term}, Map.put(state, key, term)}
+  def handle_cast({:write, {key, term}}, state) do
+    {:noreply, Map.put(state, key, term)}
   end
 
   def handle_call({:read, key, _from, state}) do
