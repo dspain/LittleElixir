@@ -52,5 +52,10 @@ defmodule MetexOtp.Cache do
     {:reply, Map.has_key?(state, key), state}
   end
 
+  def handle_info(msg, state) do
+    IO.puts("received #{inspect(msg)}")
+    {:noreply, state}
+  end
+
   ## Helper functions
 end
