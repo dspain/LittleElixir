@@ -50,6 +50,11 @@ defmodule MetexOtp.Worker do
     {:stop, :normal, stats}
   end
 
+  def handle_info(msg, stats) do
+    IO.puts("received #{inspect(msg)}")
+    {:noreply, stats}
+  end
+
   def terminate(reason, stats) do
     # We could write to a file, database etc
     IO.puts("server terminated because of #{inspect(reason)}")
