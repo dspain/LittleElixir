@@ -1,18 +1,7 @@
 defmodule ThySupervisor do
-  @moduledoc """
-  Documentation for ThySupervisor.
-  """
+  use GenServer
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ThySupervisor.hello
-      :world
-
-  """
-  def hello do
-    :world
+  def start_link(child_spec_list) do
+    GenServer.start_link(__MODULE__, [child_spec_list])
   end
 end
