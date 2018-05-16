@@ -1,6 +1,6 @@
 defmodule ThyWorker do
   def start_link do
-    spawn(fn -> loop end)
+    spawn(fn -> loop() end)
   end
 
   def loop do
@@ -10,7 +10,7 @@ defmodule ThyWorker do
 
       msg ->
         IO.inspect(msg)
-        loop
+        loop()
     end
   end
 end

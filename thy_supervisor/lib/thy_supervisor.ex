@@ -4,6 +4,7 @@ defmodule ThySupervisor do
   #######
   # API #
   #######
+
   def start_link(child_spec_list) do
     GenServer.start_link(__MODULE__, [child_spec_list])
   end
@@ -64,7 +65,7 @@ defmodule ThySupervisor do
     end
   end
 
-  def handle_call({restart_child, old_pid}, _from, state) do
+  def handle_call({:restart_child, old_pid}, _from, state) do
     case HashDict.fetch(state, old_pid) do
       {:ok, child_spec} ->
         case restart_child(old_pid, child_spec) do
@@ -103,7 +104,7 @@ defmodule ThySupervisor do
     {:noreply, new_state}
   end
 
-  def handle_info({:EXIT, from, _reason}, state) do
+  def handle_info({:EXIT, old_pid, _reason}, state) do
     case HashDict.fetch(state, old_pid) do
       {:ok, child_spec} ->
         case restart_child(old_pid, child_spec) do
