@@ -1,5 +1,6 @@
 defmodule ThySupervisor do
   use GenServer
+  require IEx
 
   #######
   # API #
@@ -39,6 +40,8 @@ defmodule ThySupervisor do
       child_spec_list
       |> start_children
       |> Enum.into(HashDict.new())
+
+    IEx.pry()
 
     {:ok, state}
   end
@@ -149,6 +152,8 @@ defmodule ThySupervisor do
         :error
     end
   end
+
+  defp start_children([]), do: []
 
   defp terminate_child(pid) do
     Process.exit(pid, :kill)
