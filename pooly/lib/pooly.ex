@@ -1,18 +1,6 @@
 defmodule Pooly do
-  @moduledoc """
-  Documentation for Pooly.
-  """
+end
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Pooly.hello
-      :world
-
-  """
-  def hello do
-    :world
-  end
+defmodule Pooly.WorkerSupervisor do
+  use Supervisor
 end
