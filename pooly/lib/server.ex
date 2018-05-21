@@ -17,7 +17,7 @@ defmodule Pooly.Server do
     GenServer.call(__MODULE__, :checkout)
   end
 
-  def checkin do
+  def checkin(worker_pid) do
     GenServer.cast(__MODULE__, {:checkin, worker_pid})
   end
 
