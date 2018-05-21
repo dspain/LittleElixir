@@ -50,4 +50,17 @@ defmodule Pooly.Server do
     opts = [restart: :temporary]
     supervisor(Pooly.WorkerSupervisor, [mfa], opts)
   end
+
+  defp prepopulate(size, sup) do
+    prepopulate(size, sup, [])
+  end
+
+  defp prepopulate(size, sup, workers) do
+    prepopulate(size - 1, sup, [new_worker(sup) | workers])
+  end
+
+  defp new_worker(sup) do
+    {:ok, worker} = Supervisor.start_child(sup, [[]])
+    worker
+  end
 end
