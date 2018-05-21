@@ -68,6 +68,10 @@ defmodule Pooly.Server do
     end
   end
 
+  def handle_call(:status, _from, %{workers: workers, monitors: monitors} = state) do
+    {:reply, {length(workers), :ets.info(monitors, :size)}, state}
+  end
+
   def handle_cast({:checkin, worker}, %{workers: workers, monitors: monitors} = state) do
     case :ets.lookup(monitors, worker) do
       [{pid, ref}] ->
@@ -78,10 +82,6 @@ defmodule Pooly.Server do
       [] ->
         {:noreply, state}
     end
-  end
-
-  def handle_call(:status, _from, %{workers: workers, monitors: monitors} = state) do
-    {:reply, {length(workers), :ets.info(monitors, :size)}, state}
   end
 
   #####################
