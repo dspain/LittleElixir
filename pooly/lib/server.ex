@@ -96,6 +96,10 @@ defmodule Pooly.Server do
     prepopulate(size, sup, [])
   end
 
+  defp prepopulate(size, _sup, workers) when size < 1 do
+    workers
+  end
+
   defp prepopulate(size, sup, workers) do
     prepopulate(size - 1, sup, [new_worker(sup) | workers])
   end
