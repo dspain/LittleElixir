@@ -12,4 +12,8 @@ defmodule SampleWorker do
   def handle_call(:stop, _from, state) do
     {:stop, :normal, :ok, state}
   end
+
+  def init(args) do
+    {:ok, args}
+  end
 end
