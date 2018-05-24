@@ -8,7 +8,7 @@ defmodule Pooly do
       [name: "Pool3", mfa: {SampleWorker, :start_link, []}, size: 4]
     ]
 
-    start_pools(pool_config)
+    start_pools(pools_config)
   end
 
   def start_pools(pools_config) do
