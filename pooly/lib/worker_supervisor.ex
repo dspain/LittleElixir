@@ -11,7 +11,7 @@ defmodule Pooly.WorkerSupervisor do
   #############
   # Callbacks #
   #############
-  def init(pool_server, {m, f, a}) do
+  def init([pool_server, {m, f, a}]) do
     Process.link(pool_server)
     worker_opts = [restart: :temporary, shutdown: 5000, function: f]
     children = [worker(m, a, worker_opts)]
