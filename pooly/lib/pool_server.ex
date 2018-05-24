@@ -110,7 +110,10 @@ defmodule Pooly.PoolServer do
     end
   end
 
-  def handle_info({:EXIT, pid, _reason}, state = %{monitors: monitors, workers: workers}) do
+  def handle_info(
+        {:EXIT, pid, _reason},
+        state = %{monitors: monitors, workers: workers, pool_sup: pool_sup}
+      ) do
     case :ets.lookup(monitors, pid) do
       [{pid, ref}] ->
         true = Process.demonitor(ref)
@@ -134,11 +137,6 @@ defmodule Pooly.PoolServer do
     :"#{pool_name}Server"
   end
 
-  defp supervisor_spec(mfa) do
-    opts = [restart: :temporary]
-    supervisor(Pooly.WorkerSupervisor, [mfa], opts)
-  end
-
   defp prepopulate(size, sup) do
     prepopulate(size, sup, [])
   end
@@ -158,6 +156,6 @@ defmodule Pooly.PoolServer do
 
   defp supervisor_spec(name, mfa) do
     opts = [id: name <> "WorkerSupervisor", restart: :temporary]
-    supervisor(Pooly.WorkerSupervisor, [self, mfa], opts)
+    supervisor(Pooly.WorkerSupervisor, [self(), mfa], opts)
   end
 end
