@@ -2,10 +2,6 @@ defmodule Pooly.Server do
   use GenServer
   import Supervisor.Spec
 
-  defmodule State do
-    defstruct sup: nil, worker_sup: nil, size: nil, workers: nil, mfa: nil, monitors: nil
-  end
-
   #######
   # API #
   #######
