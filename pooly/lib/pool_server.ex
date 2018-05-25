@@ -9,7 +9,9 @@ defmodule Pooly.PoolServer do
               workers: nil,
               mfa: nil,
               monitors: nil,
-              name: nil
+              name: nil,
+              overflow: nil,
+              max_overflow: nil
   end
 
   #######
@@ -50,6 +52,10 @@ defmodule Pooly.PoolServer do
 
   def init([{:size, size} | rest], state) do
     init(rest, %{state | size: size})
+  end
+
+  def init([{:max_overflow, max_overflow} | rest], state) do
+    init(rest, %{state | max_overflow: max_overflow})
   end
 
   def init([], state) do
