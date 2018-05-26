@@ -96,12 +96,13 @@ defmodule Pooly.PoolServer do
     {:reply, {length(workers), :ets.info(monitors, :size)}, state}
   end
 
-  def handle_cast({:checkin, worker}, %{workers: workers, monitors: monitors} = state) do
+  def handle_cast({:checkin, worker}, %{monitors: monitors} = state) do
     case :ets.lookup(monitors, worker) do
       [{pid, ref}] ->
         true = Process.demonitor(ref)
         true = :ets.delete(monitors, pid)
-        {:noreply, %{state | workers: [pid | workers]}}
+        new_state = handle_checkin(pid, state)
+        {:noreply, new_state}
 
       [] ->
         {:noreply, state}
