@@ -181,4 +181,19 @@ defmodule Pooly.PoolServer do
     opts = [id: name <> "WorkerSupervisor", restart: :temporary]
     supervisor(Pooly.WorkerSupervisor, [self(), mfa], opts)
   end
+
+  def handle_checkin(pid, state) do
+    %{worker_sup: worker_sup, workers: workers, monitors: monitors, overflow: overflow} = state
+
+    if overflow > 0 do
+      :ok = dismiss_worker(worker_sup, pid)
+      %{state | waiting: empty, overflow: overflow - 1}
+      %{state | waiting: empty, workers: [pid | workers], overflow: 0}
+    end
+  end
+
+  defp dismiss_worker(sup, pid) do
+    true = Process.unlink(pid)
+    Supervisor.terminate_child(sup, pid)
+  end
 end
