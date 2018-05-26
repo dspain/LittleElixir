@@ -183,7 +183,7 @@ defmodule Pooly.PoolServer do
     supervisor(Pooly.WorkerSupervisor, [self(), mfa], opts)
   end
 
-  def handle_checkin(pid, state) do
+  defp handle_checkin(pid, state) do
     %{worker_sup: worker_sup, workers: workers, monitors: monitors, overflow: overflow} = state
 
     if overflow > 0 do
@@ -196,5 +196,15 @@ defmodule Pooly.PoolServer do
   defp dismiss_worker(sup, pid) do
     true = Process.unlink(pid)
     Supervisor.terminate_child(sup, pid)
+  end
+
+  defp handle_worker_exit(pid, state) do
+    %{worker_sup: worker_sup, workers: workers, monitors: monitors, overflow: overflow} = state
+
+    if overflow > 0 do
+      %{state | overflow: overflow - 1}
+    else
+      %{state | workers: [new_worker(worker_sup) | workers]}
+    end
   end
 end
