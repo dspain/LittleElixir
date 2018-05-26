@@ -136,13 +136,13 @@ defmodule Pooly.PoolServer do
 
   def handle_info(
         {:EXIT, pid, _reason},
-        state = %{monitors: monitors, workers: workers, pool_sup: pool_sup}
+        state = %{monitors: monitors, workers: workers, worker_sup: worker_sup}
       ) do
     case :ets.lookup(monitors, pid) do
       [{pid, ref}] ->
         true = Process.demonitor(ref)
         true = :ets.delete(monitors, pid)
-        new_state = %{state | workers: [new_worker(pool_sup) | workers]}
+        new_state = handle_worker_exit(pid, state)
         {:noreply, new_state}
 
       _ ->
