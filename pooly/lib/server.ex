@@ -14,11 +14,11 @@ defmodule Pooly.Server do
   end
 
   def checkin(pool_name, worker_pid) do
-    GenServer.cast(:"#{pool_name}Server", {:checkin, worker_pid})
+    Pooly.PoolServer.checkin(pool_name, worker_pid)
   end
 
   def status(pool_name) do
-    GenServer.call(:"#{pool_name}Server", :status)
+    Pooly.PoolServer.status(pool_name)
   end
 
   #############
