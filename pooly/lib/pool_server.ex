@@ -187,6 +187,12 @@ defmodule Pooly.PoolServer do
     worker
   end
 
+  defp new_worker(sup, from_pid) do
+    pid = new_worker(sup)
+    ref = Process.monitor(from_pid)
+    {pid, ref}
+  end
+
   defp supervisor_spec(name, mfa) do
     opts = [id: name <> "WorkerSupervisor", restart: :temporary]
     supervisor(Pooly.WorkerSupervisor, [self(), mfa], opts)
