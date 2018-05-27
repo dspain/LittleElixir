@@ -149,7 +149,7 @@ defmodule Pooly.PoolServer do
 
   def handle_info(
         {:EXIT, pid, _reason},
-        state = %{monitors: monitors, workers: _workers, worker_sup: _worker_sup}
+        state = %{monitors: monitors, workers: workers, worker_sup: worker_sup}
       ) do
     case :ets.lookup(monitors, pid) do
       [{pid, ref}] ->
@@ -157,6 +157,17 @@ defmodule Pooly.PoolServer do
         true = :ets.delete(monitors, pid)
         new_state = handle_worker_exit(pid, state)
         {:noreply, new_state}
+
+      [] ->
+        case Enum.member?(workers, pid) do
+          true ->
+            remaining_workers = workers |> Enum.reject(fn p -> p == pid end)
+            new_state = %{state | workers: [new_worker(worker_sup) | remaining_workers]}
+            {:noreply, new_state}
+
+          false ->
+            {:noreply, state}
+        end
 
       _ ->
         {:noreply, state}
@@ -235,7 +246,7 @@ defmodule Pooly.PoolServer do
     Supervisor.terminate_child(sup, pid)
   end
 
-  defp handle_worker_exit(_pid, state) do
+  defp handle_worker_exit(pid, state) do
     %{
       worker_sup: worker_sup,
       workers: workers,
@@ -255,7 +266,7 @@ defmodule Pooly.PoolServer do
         %{state | overflow: overflow - 1, waiting: empty}
 
       {:empty, empty} ->
-        workers = [new_worker(worker_sup) | workers]
+        workers = [new_worker(worker_sup) | workers |> Enum.reject(fn p -> p != pid end)]
         %{state | workers: workers, waiting: empty}
     end
   end
