@@ -97,12 +97,16 @@ defmodule Pooly.PoolServer do
         {:noreply, %{state | waiting: waiting}, :infinity}
 
       [] ->
-        {:reply, :noproc, state}
+        {:reply, :full, state}
     end
   end
 
   def handle_call(:status, _from, %{workers: workers, monitors: monitors} = state) do
     {:reply, {state_name(state), length(workers), :ets.info(monitors, :size)}, state}
+  end
+
+  def handle_call(_msg, _from, state) do
+    {:reply, {:error, :invalid_message}, :ok, state}
   end
 
   def handle_cast({:checkin, worker}, %{monitors: monitors} = state) do
