@@ -193,12 +193,26 @@ defmodule Pooly.PoolServer do
   end
 
   defp handle_checkin(pid, state) do
-    %{worker_sup: worker_sup, workers: workers, monitors: monitors, overflow: overflow} = state
+    %{
+      worker_sup: worker_sup,
+      workers: workers,
+      monitors: monitors,
+      overflow: overflow,
+      waiting: waiting
+    } = state
 
-    if overflow > 0 do
-      :ok = dismiss_worker(worker_sup, pid)
-      %{state | waiting: empty, overflow: overflow - 1}
-      %{state | waiting: empty, workers: [pid | workers], overflow: 0}
+    case :queue.out(waiting) do
+      {{:value, {from, ref}}, left} ->
+        true = :ets.insert(monitors, {pid, ref})
+        GenServer.reply(from, pid)
+        %{state | waiting: left}
+
+      {:empty, empty} when overflow > 0 ->
+        :ok = dismiss_worker(worker_sup, pid)
+        %{state | waiting: empty, overflow: overflow - 1}
+
+      {:empty, empty} ->
+        %{state | waiting: empty, workers: [pid | workers], overflow: 0}
     end
   end
 
