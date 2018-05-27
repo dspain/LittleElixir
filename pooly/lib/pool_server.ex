@@ -222,12 +222,27 @@ defmodule Pooly.PoolServer do
   end
 
   defp handle_worker_exit(pid, state) do
-    %{worker_sup: worker_sup, workers: workers, monitors: monitors, overflow: overflow} = state
+    %{
+      worker_sup: worker_sup,
+      workers: workers,
+      monitors: monitors,
+      overflow: overflow,
+      waiting: waiting
+    } = state
 
-    if overflow > 0 do
-      %{state | overflow: overflow - 1}
-    else
-      %{state | workers: [new_worker(worker_sup) | workers]}
+    case :queue.out(waiting) do
+      {{:value, {from, ref}}, left} ->
+        new_worker = new_worker(worker_sup)
+        true = :ets.insert(monitors, {new_worker, ref})
+        GenServer.reply(from, new_worker)
+        %{state | waiting: left}
+
+      {:empty, empty} when overflow > 0 ->
+        %{state | overflow: overflow - 1, waiting: empty}
+
+      {:empty, empty} ->
+        workers = [new_worker(worker_sup) | workers]
+        %{state | workers: workers, waiting: empty}
     end
   end
 
