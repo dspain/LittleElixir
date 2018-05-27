@@ -163,6 +163,10 @@ defmodule Pooly.PoolServer do
     end
   end
 
+  def handle_info(_info, state) do
+    {:noreply, state}
+  end
+
   def terminate(_reason, _state) do
     :ok
   end
