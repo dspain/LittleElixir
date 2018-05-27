@@ -75,6 +75,7 @@ defmodule Pooly.PoolServer do
       worker_sup: worker_sup,
       workers: workers,
       monitors: monitors,
+      waiting: waiting,
       overflow: overflow,
       max_overflow: max_overflow
     } = state
@@ -89,6 +90,11 @@ defmodule Pooly.PoolServer do
         {worker, ref} = new_worker(worker_sup, from_pid)
         true = :ets.insert(monitors, {worker, ref})
         {:reply, worker, %{state | overflow: overflow + 1}}
+
+      [] when block == true ->
+        ref = Process.monitor(from_pid)
+        waiting = :queue.in({from, ref}, waiting)
+        {:noreply, %{state | waiting: waiting}, :infinity}
 
       [] ->
         {:reply, :noproc, state}
