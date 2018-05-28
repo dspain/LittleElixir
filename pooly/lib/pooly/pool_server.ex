@@ -203,6 +203,7 @@ defmodule Pooly.PoolServer do
 
   defp new_worker(sup) do
     {:ok, worker} = Supervisor.start_child(sup, [[]])
+    true = Process.link(worker)
     worker
   end
 
