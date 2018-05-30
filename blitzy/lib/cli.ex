@@ -27,4 +27,19 @@ defmodule Blitzy.CLI do
         do_help
     end
   end
+
+  defp do_help do
+    IO.puts("""
+    Usage:
+    blitzy -n [requests] [url]
+
+    Options:
+    -n, [--requests]      # Number of requests
+
+    Example:
+    ./blitzy -n 100 http://www.bieberfever.com
+    """)
+
+    System.halt(0)
+  end
 end
