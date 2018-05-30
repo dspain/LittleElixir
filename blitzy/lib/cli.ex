@@ -4,9 +4,15 @@ defmodule Blitzy.CLI do
   require Logger
 
   def main(args) do
+    Application.get_env(:blitzy, :master_node)
+    |> Node.start()
+
+    Application.get_env(:blitzy, :slave_nodes)
+    |> Enum.each(&Node.connect(&1))
+
     args
     |> parse_args
-    |> process_options
+    |> process_options([node() | Node.list()])
   end
 
   defp parse_args(args) do
