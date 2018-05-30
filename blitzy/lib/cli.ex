@@ -30,7 +30,7 @@ defmodule Blitzy.CLI do
         url
 
       _ ->
-        do_help
+        do_help()
     end
   end
 

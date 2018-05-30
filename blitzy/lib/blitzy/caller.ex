@@ -1,6 +1,6 @@
 defmodule Blitzy.Caller do
   def start(n_workers, url) do
-    me = self
+    me = self()
 
     1..n_workers
     |> Enum.map(fn _ -> spawn(fn -> Blitzy.Worker.start(url, me) end) end)
