@@ -10,6 +10,6 @@ defmodule Blitzy.Supervisor do
       supervisor(Task.Supervisor, [[name: Blitzy.TasksSupervisor]])
     ]
 
-    supervise(children, startegy: :one_for_on)
+    supervise(children, strategy: :one_for_one)
   end
 end
