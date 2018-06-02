@@ -16,7 +16,7 @@ defmodule Chucky.Server do
   # Callbacks #
   #############
   def init([]) do
-    :random.seed(:os.timestamp())
+    :rand.seed(:os.timestamp())
 
     facts =
       "facts.txt"
