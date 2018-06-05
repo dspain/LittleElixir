@@ -7,6 +7,7 @@ defmodule DialyzerPlayground.MixProject do
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
+      dialyzer: [plt_add_deps: :transitive],
       deps: deps()
     ]
   end
