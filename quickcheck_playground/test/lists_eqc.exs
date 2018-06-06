@@ -26,6 +26,12 @@ defmodule ListsEQC do
     end
   end
 
+  property "calling Enum.uniq/1 twice has no effect" do
+    forall l <- list(int) do
+      ensure(l |> Enum.uniq() == l |> Enum.uniq() |> Enum.uniq())
+    end
+  end
+
   def is_sorted([]), do: true
 
   def is_sorted(list) do
