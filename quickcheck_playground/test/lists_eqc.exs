@@ -63,4 +63,11 @@ defmodule ListsEQC do
   #     index -> {:match, index}
   #   end
   # end
+
+  property "tail of list" do
+    forall l <- non_empty(list(int)) do
+      [_head | tail] = l
+      ensure(tl(l) == tail)
+    end
+  end
 end
