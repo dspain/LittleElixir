@@ -70,4 +70,10 @@ defmodule ListsEQC do
       ensure(tl(l) == tail)
     end
   end
+
+  property "list concatenation" do
+    forall {l1, l2} <- {list(int), list(int)} do
+      ensure(Enum.concat(l1, l2) == l1 ++ l2)
+    end
+  end
 end
