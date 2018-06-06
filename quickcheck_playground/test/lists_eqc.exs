@@ -20,6 +20,12 @@ defmodule ListsEQC do
     end
   end
 
+  property "appending an element and sorting it is the same as prepending an element and sorting it" do
+    forall {i, l} <- {int(), list(int)} do
+      [i | l] |> Enum.sort() == (l ++ [i]) |> Enum.sort()
+    end
+  end
+
   def is_sorted([]), do: true
 
   def is_sorted(list) do
