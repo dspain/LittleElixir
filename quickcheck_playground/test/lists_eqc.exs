@@ -39,4 +39,28 @@ defmodule ListsEQC do
     |> Enum.zip(tl(list))
     |> Enum.all?(fn {x, y} -> x <= y end)
   end
+
+  # property "storing keys and values" do
+  #   forall {k, v, m} <- {key, val, map} do
+  #     map_to_list = m |> Map.put(k, v) |> Map.to_list()
+  #     map_to_list == map_store(k, v, map_to_list)
+  #   end
+  # end
+  #
+  # defp map_store(k, v, list) do
+  #   case find_index_with_key(k, list) do
+  #     {:match, index} ->
+  #       List.replace_at(list, index, {k, v})
+  #
+  #     _ ->
+  #       [{k, v} | list]
+  #   end
+  # end
+  #
+  # defp find_index_with_key(k, list) do
+  #   case Enum.find_index(list, fn {x, _} -> x == k end) do
+  #     nil -> :nomatch
+  #     index -> {:match, index}
+  #   end
+  # end
 end
