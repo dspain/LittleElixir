@@ -3,7 +3,7 @@ defmodule StringEQC do
   use EQC.ExUnit
 
   property "splitting a string with a delimiter and joining it again yields the same string" do
-    forall s <- list(char) do
+    forall s <- EQCGen.string_with_commas() do
       s = to_string(s)
 
       :eqc.classify(
