@@ -7,7 +7,7 @@ defmodule EQCGen do
 
   def string_with_variable_length do
     let len <- choose(1, 10) do
-      vector(len, oneof(:lists.seq(?a, ?z)))
+      vector(len, frequency([{3, oneof(:lists.seq(?a, ?z))}, {1, ?,}]))
     end
   end
 end
