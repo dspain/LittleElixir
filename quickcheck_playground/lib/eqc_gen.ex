@@ -29,7 +29,7 @@ defmodule EQCGen do
 
   defp nested_list(n, gen) do
     lazy do
-      oneof([[gen | nested_list(n - 1, gen)], [nested_list(n - 1), gen]])
+      oneof([[gen | nested_list(n - 1, gen)], [nested_list(n - 1, gen)]])
     end
   end
 
