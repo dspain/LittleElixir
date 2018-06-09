@@ -5,6 +5,6 @@ defmodule PingPong.ConcurrencyTest do
 
   def test do
     ping_pid = spawn(fn -> ping() end)
-    spawn(fn -> pong(ping_id) end)
+    spawn(fn -> pong(ping_pid) end)
   end
 end
